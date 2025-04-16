@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bauer Media Audio - AI Podcast Intro Generator</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Bauer Media Audio</h1>
+            <h2>AI Podcast Intro Generator</h2>
+            <p class="subtitle">Generate engaging podcast intros with psychological insights</p>
+        </header>
+
+        <main>
+            <form method="POST" class="generator-form">
+                <div class="form-group">
+                    <label for="theme">Podcast Theme/Genre:</label>
+                    <input type="text" id="theme" name="theme" placeholder="e.g., true crime, comedy, business" required>
+                </div>
+                <button type="submit" class="generate-btn">Generate Intros</button>
+            </form>
+
+            {% if intros %}
+            <div class="result-section">
+                <h3>Generated Intro Variants</h3>
+                <div class="intro-variants">
+                    {% for variant in intros.variants %}
+                    <div class="variant">
+                        <h4>Variant {{ loop.index }}</h4>
+                        <div class="intro-text">{{ variant }}</div>
+                        <!-- Uncomment for TTS integration -->
+                        <!--
+                        <div class="tts-controls">
+                            <button class="tts-btn" data-text="{{ variant }}">Generate MP3</button>
+                        </div>
+                        -->
+                    </div>
+                    {% endfor %}
+                </div>
+
+                <div class="analysis-section">
+                    <h3>Psychological Analysis</h3>
+                    <div class="analysis-content">
+                        {% set analysis_lines = intros.analysis.split('\n') %}
+                        {% for line in analysis_lines %}
+                            {% if line.startswith('1.') %}
+                                <div class="analysis-subsection">
+                                    <h4>LIWC Framework Analysis</h4>
+                            {% elif line.startswith('2.') %}
+                                </div>
+                                <div class="analysis-subsection">
+                                    <h4>Pennebaker Psychological Framework</h4>
+                            {% elif line.startswith('3.') %}
+                                </div>
+                                <div class="analysis-subsection">
+                                    <h4>Variant-Specific Technique Analysis</h4>
+                            {% elif line.startswith('4.') %}
+                                </div>
+                                <div class="analysis-subsection">
+                                    <h4>Engagement Metrics Prediction</h4>
+                            {% endif %}
+
+                            {% if line.strip().startswith('1.1') or line.strip().startswith('1.2') or 
+                                  line.strip().startswith('2.1') or line.strip().startswith('2.2') or
+                                  line.strip().startswith('3.1') or line.strip().startswith('3.2') or
+                                  line.strip().startswith('3.3') or line.strip().startswith('4.1') or
+                                  line.strip().startswith('4.2') %}
+                                <h5>{{ line.strip() }}</h5>
+                            {% elif line.strip().startswith('•') %}
+                                <div class="analysis-list">
+                                    <div class="analysis-list-item">{{ line.strip()[1:] }}</div>
+                                </div>
+                            {% elif line.strip().startswith('-') %}
+                                <div class="analysis-list">
+                                    <div class="analysis-list-item">{{ line.strip()[1:] }}</div>
+                                </div>
+                            {% endif %}
+                        {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+        </main>
+
+        <footer>
+            <p>© 2024 Bauer Media Audio - AI Innovation Lab</p>
+            <p class="integration-note">Designed for integration with Bauer's CMS portal</p>
+        </footer>
+    </div>
+
+    <!-- Uncomment for TTS integration -->
+    <!--
+    <script>
+        document.querySelectorAll('.tts-btn').forEach(button => {
+            button.addEventListener('click', async (e) => {
+                const text = e.target.dataset.text;
+                const response = await fetch('/generate-tts', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ text: text })
+                });
+                const blob = await response.blob();
+                const url = window.URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = 'intro.mp3';
+                document.body.appendChild(a);
+                a.click();
+                window.URL.revokeObjectURL(url);
+            });
+        });
+    </script>
+    -->
+</body>
+</html> 
